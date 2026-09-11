@@ -1,3 +1,9 @@
+
+
+https://github.com/user-attachments/assets/622c8a38-8e2d-4246-a8c4-3b48a3405c8b
+
+
+
 # 🌌 AURA — AI Unified Research & Audit
 
 > **Kurumsal Doküman Analizi, Güvenli Web Sitesi Denetimi ve Yapay Zekâ Destekli Mevzuat Uyumluluk Platformu**
