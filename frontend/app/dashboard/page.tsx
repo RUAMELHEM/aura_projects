@@ -179,7 +179,12 @@ export default function DashboardPage() {
           </div>
 
           <div className="h-64 w-full pt-2">
-            {summary?.daily_ai_usage && summary.daily_ai_usage.length > 0 ? (
+            {loading ? (
+              <div className="h-full flex items-center justify-center text-xs text-zinc-500 gap-2">
+                <Activity className="w-4 h-4 animate-spin text-violet-500" />
+                Grafik verisi yükleniyor...
+              </div>
+            ) : summary?.daily_ai_usage && summary.daily_ai_usage.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={summary.daily_ai_usage} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
@@ -208,7 +213,7 @@ export default function DashboardPage() {
               </ResponsiveContainer>
             ) : (
               <div className="h-full flex items-center justify-center text-xs text-zinc-500">
-                Grafik verisi yükleniyor...
+                Henüz yapay zeka etkileşim verisi bulunmuyor
               </div>
             )}
           </div>
@@ -230,7 +235,12 @@ export default function DashboardPage() {
           </div>
 
           <div className="h-64 w-full pt-2">
-            {summary?.issues_by_category && summary.issues_by_category.length > 0 ? (
+            {loading ? (
+              <div className="h-full flex items-center justify-center text-xs text-zinc-500 gap-2">
+                <Activity className="w-4 h-4 animate-spin text-amber-500" />
+                Sorun dağılımı yükleniyor...
+              </div>
+            ) : summary?.issues_by_category && summary.issues_by_category.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={summary.issues_by_category} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
@@ -249,7 +259,7 @@ export default function DashboardPage() {
               </ResponsiveContainer>
             ) : (
               <div className="h-full flex items-center justify-center text-xs text-zinc-500">
-                Sorun dağılımı yükleniyor...
+                Henüz tespit edilen sorun bulunmuyor
               </div>
             )}
           </div>

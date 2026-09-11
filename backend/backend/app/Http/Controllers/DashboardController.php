@@ -67,9 +67,9 @@ class DashboardController extends Controller
             'accessibility' => 'Erişilebilirlik',
         ];
 
-        $categoryRaw = WebsiteIssue::selectRaw('type, count(*) as count')
-            ->groupBy('type')
-            ->pluck('count', 'type')
+        $categoryRaw = WebsiteIssue::selectRaw('category, count(*) as count')
+            ->groupBy('category')
+            ->pluck('count', 'category')
             ->all();
 
         $issuesByCategory = [];
