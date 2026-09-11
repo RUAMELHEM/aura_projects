@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+:root {
+  /* Default to dark mode for a premium look */
+  --background: #09090b; /* zinc-950 */
+  --foreground: #fafafa; /* zinc-50 */
+  
+  /* Brand colors */
+  --brand-primary: #8b5cf6; /* violet-500 */
+  --brand-secondary: #a855f7; /* purple-500 */
+  --brand-accent: #3b82f6; /* blue-500 */
+  
+  /* Status colors */
+  --status-success: #22c55e;
+  --status-warning: #eab308;
+  --status-danger: #ef4444;
+  
+  /* Card and surface colors */
+  --surface-base: #18181b; /* zinc-900 */
+  --surface-elevated: #27272a; /* zinc-800 */
+  --border-subtle: rgba(255, 255, 255, 0.1);
+}
+
+html.light {
+  --background: #f8fafc; /* slate-50 */
+  --foreground: #0f172a; /* slate-900 */
+  --surface-base: #ffffff;
+  --surface-elevated: #f1f5f9;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand-primary);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
+  background-attachment: fixed;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.light body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.05) 0px, transparent 50%);
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: rgba(24, 24, 27, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+html.light .glass {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.glass-card {
+  background: linear-gradient(145deg, rgba(39, 39, 42, 0.6) 0%, rgba(24, 24, 27, 0.8) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+html.light .glass-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.glass-card:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+  transform: translateY(-2px);
+}
+
+html.light .glass-card:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.12);
+}
+
+/* Light mode text & element helpers */
+html.light .text-white {
+  color: #0f172a !important;
+}
+
+html.light .text-zinc-300 {
+  color: #334155 !important;
+}
+
+html.light .text-zinc-400 {
+  color: #64748b !important;
+}
+
+html.light .text-zinc-500 {
+  color: #94a3b8 !important;
+}
+
+html.light .bg-zinc-900,
+html.light .bg-zinc-950 {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .bg-zinc-800 {
+  background-color: #e2e8f0 !important;
+}
+
+html.light .border-zinc-700,
+html.light .border-zinc-800,
+html.light .border-white\/10,
+html.light .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}

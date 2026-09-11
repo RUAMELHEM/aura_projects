@@ -1,0 +1,133 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg15
+    container_name: aura_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: aura
+      POSTGRES_USER: aura_user
+      POSTGRES_PASSWORD: aura_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  redis:
+    image: redis:7-alpine
+    container_name: aura_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+    container_name: aura_app
+    restart: unless-stopped
+    working_dir: /var/www/html/backend
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "8000:80"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      APP_NAME: AURA
+      APP_KEY: ${APP_KEY:-base64:X/z3MVtYnFrR80J/dkKdN8YFdyduGXPRtb5UN4Kd3jM=}
+      APP_ENV: local
+      APP_DEBUG: "true"
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: aura
+      DB_USERNAME: aura_user
+      DB_PASSWORD: aura_pass
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      QUEUE_CONNECTION: redis
+      PYTHON_SERVICE_URL: http://python:8000
+      PYTHON_INTERNAL_API_KEY: gizli-anahtar-12345
+      CRAWL_MAX_PAGES: 10
+      CRAWL_REQUEST_DELAY: 0.5
+      CRAWL_TIMEOUT: 10
+      CRAWL_MAX_REDIRECTS: 3
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+    container_name: aura_queue
+    restart: unless-stopped
+    working_dir: /var/www/html/backend
+    command: php artisan queue:work redis --sleep=2 --tries=3 --timeout=180
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      - postgres
+      - redis
+      - app
+    environment:
+      APP_NAME: AURA
+      APP_KEY: ${APP_KEY:-base64:X/z3MVtYnFrR80J/dkKdN8YFdyduGXPRtb5UN4Kd3jM=}
+      APP_ENV: local
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: aura
+      DB_USERNAME: aura_user
+      DB_PASSWORD: aura_pass
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      QUEUE_CONNECTION: redis
+      PYTHON_SERVICE_URL: http://python:8000
+      PYTHON_INTERNAL_API_KEY: gizli-anahtar-12345
+      CRAWL_MAX_PAGES: 10
+      CRAWL_REQUEST_DELAY: 0.5
+      CRAWL_TIMEOUT: 10
+      CRAWL_MAX_REDIRECTS: 3
+
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: aura_python
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./python:/app
+      - ./backend:/var/www/html  # Laravel storage'ına erişim için
+    ports:
+      - "8001:8000"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgresql://aura_user:aura_pass@postgres:5432/aura
+      REDIS_URL: redis://redis:6379/0
+      INTERNAL_API_KEY: gizli-anahtar-12345
+      STORAGE_BASE_PATH: /var/www/html/backend/storage/app
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      CRAWL_MAX_PAGES: 10
+      CRAWL_REQUEST_DELAY: 0.5
+      CRAWL_TIMEOUT: 10
+      CRAWL_MAX_REDIRECTS: 3
+
+  frontend:
+    image: node:20-alpine
+    container_name: aura_frontend
+    restart: unless-stopped
+    working_dir: /app/frontend
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./frontend:/app/frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+
+volumes:
+  postgres_data:
